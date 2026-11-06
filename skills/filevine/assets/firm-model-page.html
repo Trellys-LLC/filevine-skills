@@ -1,4 +1,4 @@
-<title>Filevine firm profile</title>
+<title>Filevine Models</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 <style>
@@ -37,6 +37,9 @@ body {
 }
 main { max-width: 62rem; margin: 0 auto; display: grid; gap: 36px; }
 h1 { font-size: 1.75rem; line-height: 1.2; font-weight: 600; margin: 0 0 6px; text-wrap: balance; }
+h3 { font-size: 0.9375rem; font-weight: 600; margin: 14px 0 0; }
+.org { display: grid; gap: 36px; padding-bottom: 28px; border-bottom: 1px solid var(--line); }
+.org:last-child { border-bottom: 0; }
 h2 { font-size: 1.0625rem; font-weight: 600; margin: 0 0 4px; }
 .lede, .note { color: var(--muted); margin: 0; max-width: 65ch; }
 .note { font-size: 0.875rem; margin-top: 6px; }
@@ -109,97 +112,105 @@ ul.gaps li { margin-bottom: 4px; }
   }
   function sum(list, key) { return list.reduce(function (a, x) { return a + (x[key] || 0); }, 0); }
 
-  function render(d) {
-    app.replaceChildren();
-    if (!d.meta) {
-      var e = el('div', 'empty', "No firm model saved yet. Ask Claude to read this firm's Filevine setup and save it here, and the project types, phases and sections will appear on this page.");
-      app.append(e);
-      return;
-    }
-    var head = el('header');
-    head.append(el('p', 'meta', 'Filevine org ' + d.meta.orgId + ' · read ' + d.meta.asOf));
-    head.append(el('h1', '', (d.meta.firm || 'Firm') + ' Filevine model'));
-    var types = (d.types && d.types.items) || [];
-    var open = sum(types, 'open'), archived = sum(types, 'archived');
-    var used = types.filter(function (t) { return (t.open || 0) + (t.archived || 0) > 0; }).length;
-    head.append(el('p', 'lede', open + ' open and ' + archived + ' archived cases across ' + used + ' of ' + types.length + ' project types. ' + (d.meta.note || '')));
-    app.append(head);
+  function byPrefix(docs, prefix) {
+    return Object.keys(docs).filter(function (k) { return k.indexOf(prefix) === 0; }).map(function (k) { return docs[k]; });
+  }
 
-    if (types.length) {
-      var s1 = section('Project types');
-      var sorted = types.slice().sort(function (a, b) { return ((b.open || 0) + (b.archived || 0)) - ((a.open || 0) + (a.archived || 0)) || String(a.name).localeCompare(String(b.name)); });
-      s1.append(table(
-        [{ label: 'Type' }, { label: 'ID', num: true }, { label: 'Open', num: true }, { label: 'Archived', num: true }],
-        sorted.map(function (t) {
-          return row([{ text: t.name }, { text: t.id, cls: 'num mono' }, { text: t.open || 0, cls: 'num' }, { text: t.archived || 0, cls: 'num' }]);
-        })
-      ));
-      if (d.types.note) s1.append(el('p', 'note', d.types.note));
-      app.append(s1);
-    }
-
-    if (d.phases && d.phases.items) {
-      var s2 = section(d.phases.typeName + ' lifecycle', d.phases.note);
+  function renderType(t) {
+    var wrap = el('div');
+    if (t.phases && t.phases.length) {
       var list = el('ol', 'steps');
-      var flow = d.phases.items.filter(function (p) { return !p.permanent; }).sort(function (a, b) { return a.position - b.position; });
-      var fixed = d.phases.items.filter(function (p) { return p.permanent; });
+      var flow = t.phases.filter(function (p) { return !p.permanent; }).sort(function (a, b) { return a.position - b.position; });
+      var fixed = t.phases.filter(function (p) { return p.permanent; });
       flow.concat(fixed).forEach(function (p, i) {
         var li = el('li', 'step' + (p.permanent ? ' is-permanent' : ''));
         li.append(el('div', 'n', p.permanent ? 'permanent' : 'step ' + (i + 1)));
         li.append(el('div', 'name', p.name));
         var c = el('div', 'count');
-        var b = el('b', '', String(p.open || 0));
-        c.append(b, document.createTextNode(' open'));
+        c.append(el('b', '', String(p.open || 0)), document.createTextNode(' open'));
         li.append(c);
         list.append(li);
       });
-      s2.append(list);
-      app.append(s2);
+      wrap.append(list);
     }
-
-    if (d.sections && d.sections.items) {
-      var items = d.sections.items;
-      var money = items.map(function (s) { return { name: s.name, n: (s.types && s.types.Currency) || 0 }; }).filter(function (m) { return m.n > 0; }).sort(function (a, b) { return b.n - a.n; });
-      var note = money.length ? 'Money figures live in custom fields: ' + money.map(function (m) { return m.name + ' (' + m.n + ')'; }).join(', ') + '.' : '';
-      var s3 = section(d.sections.typeName + ' sections and fields', note);
-      s3.append(table(
+    if (t.sections && t.sections.length) {
+      var money = t.sections.map(function (s) { return { name: s.name, n: (s.types && s.types.Currency) || 0 }; }).filter(function (m) { return m.n > 0; });
+      if (money.length) wrap.append(el('p', 'note', 'Currency fields: ' + money.map(function (m) { return m.name + ' (' + m.n + ')'; }).join(', ') + '.'));
+      wrap.append(table(
         [{ label: 'Section' }, { label: 'Selector' }, { label: 'Kind' }, { label: 'Fields', num: true }, { label: 'Field types' }],
-        items.map(function (s) {
+        t.sections.map(function (s) {
           var chips = el('div', 'chips');
           Object.keys(s.types || {}).sort(function (a, b) { return s.types[b] - s.types[a]; }).forEach(function (k) {
             chips.append(el('span', 'chip' + (k === 'Currency' ? ' money' : ''), k + ' ' + s.types[k]));
           });
           var none = !s.fieldCount;
           return row([
-            { text: s.name },
-            { text: s.selector, cls: 'mono' },
+            { text: s.name }, { text: s.selector, cls: 'mono' },
             { text: s.kind === 'collection' ? 'Collection' : 'Form', cls: 'kind' + (s.kind === 'collection' ? ' is-collection' : '') },
             { text: none ? 'none listed' : s.fieldCount, cls: 'num' + (none ? ' dim' : '') },
             { node: chips }
           ]);
         })
       ));
-      app.append(s3);
+    }
+    return wrap;
+  }
+
+  function renderOrg(o, docs) {
+    var box = el('div', 'org');
+    var head = el('header');
+    head.append(el('p', 'meta', 'Filevine org ' + o.orgId + ' \u00b7 read ' + o.asOf));
+    head.append(el('h1', '', (o.firm || 'Firm') + ' Filevine model'));
+    var types = byPrefix(docs, 'type_' + o.orgId + '_');
+    var open = sum(types, 'open'), archived = sum(types, 'archived');
+    head.append(el('p', 'lede', open + ' open and ' + archived + ' archived cases across ' + types.length + ' project types. ' + (o.note || '')));
+    box.append(head);
+
+    if (types.length) {
+      var s1 = section('Project types');
+      var sorted = types.slice().sort(function (a, b) { return ((b.open || 0) + (b.archived || 0)) - ((a.open || 0) + (a.archived || 0)) || String(a.name).localeCompare(String(b.name)); });
+      s1.append(table(
+        [{ label: 'Type' }, { label: 'ID', num: true }, { label: 'Open', num: true }, { label: 'Archived', num: true }],
+        sorted.map(function (t) { return row([{ text: t.name }, { text: t.id, cls: 'num mono' }, { text: t.open || 0, cls: 'num' }, { text: t.archived || 0, cls: 'num' }]); })
+      ));
+      box.append(s1);
+      sorted.forEach(function (t) {
+        if ((t.phases && t.phases.length) || (t.sections && t.sections.length)) {
+          var st = section(t.name + ' lifecycle and sections', t.note);
+          st.append(renderType(t));
+          box.append(st);
+        }
+      });
     }
 
-    if (d.learned && d.learned.items && d.learned.items.length) {
+    var learned = docs['learned_' + o.orgId];
+    if (learned && learned.items && learned.items.length) {
       var s6 = section('What we have learned', 'Added as work uses it, in this firm\u2019s own words.');
       s6.append(table(
         [{ label: 'Meaning' }, { label: 'Where' }, { label: 'Learned' }],
-        d.learned.items.map(function (x) {
-          return row([{ text: x.meaning }, { text: x.where, cls: 'mono' }, { text: x.learnedAt, cls: 'dim' }]);
-        })
+        learned.items.map(function (x) { return row([{ text: x.meaning }, { text: x.where, cls: 'mono' }, { text: x.learnedAt, cls: 'dim' }]); })
       ));
-      app.append(s6);
+      box.append(s6);
     }
-
-    if (d.gaps && d.gaps.items && d.gaps.items.length) {
+    var gaps = docs['gaps_' + o.orgId];
+    if (gaps && gaps.items && gaps.items.length) {
       var s5 = section('Not known yet');
       var ul = el('ul', 'gaps');
-      d.gaps.items.forEach(function (g) { ul.append(el('li', '', g)); });
+      gaps.items.forEach(function (g) { ul.append(el('li', '', g)); });
       s5.append(ul);
-      app.append(s5);
+      box.append(s5);
     }
+    return box;
+  }
+
+  function render(docs) {
+    app.replaceChildren();
+    var orgs = byPrefix(docs, 'org_').sort(function (a, b) { return String(a.firm).localeCompare(String(b.firm)); });
+    if (!orgs.length) {
+      app.append(el('div', 'empty', "No firm model saved yet. Ask Claude to read this firm's Filevine setup and save it here, and the project types, phases and sections will appear on this page."));
+      return;
+    }
+    orgs.forEach(function (o) { app.append(renderOrg(o, docs)); });
   }
 
   function boot() {
