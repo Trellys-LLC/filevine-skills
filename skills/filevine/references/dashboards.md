@@ -108,6 +108,26 @@ Untested ideas: upcoming deadlines and appointments (calls return empty lists on
 
 Not possible through this connector: A/R aging and anything billing. Settlements, liens and medical specials exist only if the firm keeps them in its own fields (a vitals call or a section read gets them, one call per case). See SKILL.md section 3.
 
+## 4b. Pages that need one case or one person
+
+Some Filevine calls take a single ID (a project for `get_fv_app_Projects_Vitals`, a user for `get_fv_app_users_tasks`). Do not loop over every case. Make the ID a filter: write `"{{projectId}}"` (or `"{{userId}}"`) in `args`, add a `rules` entry that pins it (for example `{"projectId": {"pattern": "^[0-9]{1,12}$"}}`), and give it a default in `dash/params` that is a real ID. The page sets it with `dash.setParams` from a text box or a `<select>` whose choices come from another dataset (the staff list). Every query must run at its defaults.
+
+- A choice list for people comes from `get_fv_app_Users` (see section 6). A case lookup is a typed project ID.
+- Per-case vitals returns a plain list under `content`. A loader turns it into rows (`field`, `label`, `type`, `value`). Format `Currency` values as money and ISO dates as days in the page.
+- Per-person tasks: ask only for open tasks (the tool's default), with `requestedFields` that leave out `body`. Overdue is `targetDate` before today, done in a `dash.calc`.
+- A page kept in a hidden section loads nothing until shown, so a lookup tab costs nothing until someone opens it.
+- Each value of a filter is cached separately. The rule is the only limit on what a reader's page can send, so keep it narrow.
+
+## 4c. Testing a dashboard without a browser
+
+A remote session cannot open the page. What can be checked offline: save the real Filevine answers, then run the page's loaders and calcs in Node against them with a stub `dash` (`dash.loader`, `dash.calc` and `dash.draw` record their functions). That catches wrong field names, arithmetic and paging mistakes. It does not test drawing, marks or the platform's own check. Say so plainly, and ask the person to open the dashboard once.
+
+Things the page's first load reported back (in the `runs` document) that were my mistakes, worth avoiding:
+
+- Every `data-draw` name in the HTML needs a `dash.draw` with that name (three tiles had none).
+- A `data-draw` element must be stored holding no more than a dash. A note that is sometimes hidden belongs in the HTML, with an empty drawing beside it that sets `hidden`.
+- While nobody has the dashboard open, the type's `check` document stays at "checking" or is absent, and `runs` shows datasets "running". That is not a failure. Do not read it as one, and do not keep polling.
+
 ## 5. Sharing
 
 Only the owner shares, from the dashboard's Share menu. Claude cannot change sharing. A new dashboard is private. Tell the person who can open it and what they will see.
