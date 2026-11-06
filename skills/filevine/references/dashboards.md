@@ -106,7 +106,7 @@ Checked 2026-11-06 (the call returns the shape below; no dashboard built on it y
 
 Untested ideas: upcoming deadlines and appointments (calls return empty lists on a project with none; the row shape is unseen). Read each tool's schema first.
 
-Not possible through this connector: settlements, liens, medical specials, A/R aging, anything billing. See SKILL.md section 3.
+Not possible through this connector: A/R aging and anything billing. Settlements, liens and medical specials exist only if the firm keeps them in its own fields (a vitals call or a section read gets them, one call per case). See SKILL.md section 3.
 
 ## 5. Sharing
 
