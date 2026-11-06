@@ -1,4 +1,4 @@
-<title>Filevine Firm Profile</title>
+<title>Filevine firm profile</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 <style>
@@ -180,6 +180,17 @@ ul.gaps li { margin-bottom: 4px; }
         })
       ));
       app.append(s3);
+    }
+
+    if (d.learned && d.learned.items && d.learned.items.length) {
+      var s6 = section('What we have learned', 'Added as work uses it, in this firm\u2019s own words.');
+      s6.append(table(
+        [{ label: 'Meaning' }, { label: 'Where' }, { label: 'Learned' }],
+        d.learned.items.map(function (x) {
+          return row([{ text: x.meaning }, { text: x.where, cls: 'mono' }, { text: x.learnedAt, cls: 'dim' }]);
+        })
+      ));
+      app.append(s6);
     }
 
     if (d.gaps && d.gaps.items && d.gaps.items.length) {

@@ -17,7 +17,7 @@ Store structure and counts only. No client names, no case data, no field values,
 
 ## Procedure
 
-1. **Find the artifact.** List the person's artifacts and look for the title `Filevine firm profile`. The list returns at most 50 per call, so an older artifact can be missing. If none is found, page the list or ask for the link before creating a new one. If two share the title, ask which is current. Do not create a duplicate.
+1. **Find the artifact.** List the person's artifacts and look for a title that starts with `Filevine firm profile`. The list returns at most 50 per call, so an older artifact can be missing. If none is found, page the list or ask for the link before creating a new one. If two share the title, ask which is current. Do not create a duplicate.
 2. **If it exists, read the `model` collection first** and use it. Re-read live only what the person needs or what looks stale (`meta.asOf`).
 3. **If not, read the firm.** Get the org ID. Then, with small calls and `requestedFields`: project types; counts per type and phase from the project list (open and archived); phases for each type that has cases; sections for each type that has cases. Do not read forms or collections per project to build the model.
 4. **Write the model** to the artifact database as documents in collection `model` (below). Use `ArtifactData` `set`, and `if_version` on any existing document.
@@ -32,6 +32,7 @@ Store structure and counts only. No client names, no case data, no field values,
 | `types` | `{items: [{id, name, open, archived}], note}` |
 | `phases` | `{typeName, items: [{name, position, permanent, open}], note}`, one type at a time |
 | `sections` | `{typeName, items: [{name, selector, kind: "form" or "collection", fieldCount, types: {Currency: 2, Text: 5}}], note}` |
+| `learned` | `{items: [{meaning, where, learnedAt}]}`. Append only when a task actually used something: `meaning` in the firm's words (for example what a field holds), `where` the section selector and field selector, `learnedAt` a date |
 | `gaps` | `{items: ["..."]}` |
 
 ## Notes from testing
@@ -40,7 +41,7 @@ Store structure and counts only. No client names, no case data, no field values,
 - Money often sits in Currency fields and in the vitals call (`get_fv_app_Projects_Vitals`), when the firm has set it up.
 
 - A test or small firm has many near-empty sections. Show them as "none listed" rather than hiding them.
-- The model keeps field-type counts, not every field name. Say so if asked. Field names can be added if the person wants them.
+- The model keeps field-type counts, not every field name. Names go into `learned` one at a time, when a task uses them, with what they mean at this firm. Do not bulk-copy a section's fields into the model.
 - Money figures exist only where the firm keeps Currency fields. The page lists those.
 - Writes from a second chat: a read, merge and update worked, a stale `if_version` was rejected, nothing was overwritten. Whether the first chat saw the change live was not confirmed.
 - Not tested: connecting to a second firm, a firm with many types, and the page on a phone.
