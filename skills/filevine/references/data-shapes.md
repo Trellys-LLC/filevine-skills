@@ -26,4 +26,8 @@ Checked 2026-11-06 against two firms, one small and one large. Form and collecti
 - Collection rows: `dataObject` came back empty when `requestedFields` named only `itemId,createdDate`. Ask for the fields you want, or omit `requestedFields`, to get row values.
 - Users: each item has `user` (with `userId`, `firstName`, `lastName`, `email`, `username`), `userName`, `isActive`. Its `links.next` was malformed.
 
-Not yet seen: row shapes for deadlines and appointments (the test project had none), contacts, notes, documents, and firms with more than 1,000 projects.
+- Project contacts (`get_fv_app_Projects_contacts`): each item has `roles` (strings written "Section: Role") and `orgContact`, a large nested record with name, email, phones, addresses, job title and links. `requestedFields` works only on top-level keys, so asking for `orgContact` returns all of it, personal details included. Ask for `roles` alone unless the person needs contact details.
+- Notes (`get_fv_app_Projects_Notes`): `requestedFields` names that don't exist are silently dropped, so a wrong name gives back only the ID. Check the real field names with one item before relying on them. Note bodies hold free text and client details.
+- Folders (`get_fv_app_Folders_list`): flat list with `folderId`, `parentId`, `projectId`, `name`, `isArchived`, `isProtected`. The top folder of a case can be named after the client, so folder names are personal data too.
+
+Not yet seen: deadline rows (every list was empty), document contents, and any other tool not named above.
