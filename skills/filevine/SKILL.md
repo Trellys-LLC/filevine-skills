@@ -47,7 +47,9 @@ Almost every tool needs `header_x_fv_orgid`.
 - A firm may contain test cases. Check before treating counts as real.
 - Tools that run per project are expensive across a whole firm. Use them sparingly.
 - Load a tool's schema and run one small read-only call before relying on its arguments. Do not guess argument names.
-- Results over about 50,000 characters arrive as a file, not in context. `requestedFields` avoids that.
+- Results over about 50,000 characters arrive as a file, not in context. `requestedFields` avoids that. On a large firm even a 1,000-row project page with five fields arrives as a file. Read it with a script (Python `json`), not the Read tool, and report counts and structure, not rows.
+- A large firm can have many thousands of projects. Page until `hasMore` is false, or probe offsets: an offset past the end returns an empty page with `hasMore` false. Count with `requestedFields: projectId` to keep pages small.
+- Ask for sections with `requestedFields` (for example `id,sectionSelector,isCollection,name`). The full answer for one project type can be hundreds of thousands of characters.
 
 ## 5. Dashboards
 
@@ -59,4 +61,4 @@ To keep what Claude learns about one firm's Filevine setup (types, phases, secti
 
 ## What has been tested
 
-Tested 2026-11-05 and 2026-11-06 against a 33-project firm: `get_fv_app_Projects` (including `limit` 1000, paging, `excludeArchived`), `get_fv_app_ProjectTypes`, `post_fv_app_utils_GetUserOrgsWithToken`, `get_fv_app_users_tasks`, `get_fv_app_ProjectTypes_sections`, `get_fv_app_Users`, and the dashboard loader code. Deadlines and appointments were called on one project with none, so their row shape is unseen. Forms and collections were read on test data only. Contacts, notes and documents are untested. The firm model procedure was run once, on that firm. Not tested: firms with more than 1,000 projects, shared-connector dashboards, and guest access. Read a tool's schema before use.
+Tested 2026-11-05 and 2026-11-06 against a small test firm and, read only, a large firm: `get_fv_app_Projects` (including `limit` 1000, paging, `excludeArchived`), `get_fv_app_ProjectTypes`, `post_fv_app_utils_GetUserOrgsWithToken`, `get_fv_app_users_tasks`, `get_fv_app_ProjectTypes_sections`, `get_fv_app_Users`, and the dashboard loader code. Appointments, vitals, project tasks and collections were read on the large firm. Deadlines returned empty everywhere tried, so their row shape is unseen. Forms and collections were read on test data only. Contacts, notes and documents are untested. The firm model procedure was run once, on that firm. Not tested: dashboard loaders on a firm with thousands of projects, shared-connector dashboards, and guest access. Read a tool's schema before use.

@@ -1,6 +1,6 @@
 # How Filevine returns data
 
-Checked 2026-11-06 against a 33-project firm. Form and collection shapes were seen on a firm with few filled-in fields. If a live call disagrees, the live call wins.
+Checked 2026-11-06 against two firms, one small and one large. Form and collection shapes were seen on a firm with few filled-in fields. If a live call disagrees, the live call wins.
 
 - Lists come back as `{content: {count, offset, limit, hasMore, items: [...]}}`. `count` is the size of that page, not the total. Page with `offset += limit` while `hasMore` is true. Do not follow `links.next` or `links.self`.
 - IDs are objects like `{"native": 12345, "partner": ...}`. Read `.native`. Keep IDs as strings when joining.
@@ -16,5 +16,14 @@ Checked 2026-11-06 against a 33-project firm. Form and collection shapes were se
 - Currency comes back as a JSON number with eight decimals.
 - Section IDs are plain integers, not native-ID objects. Pass each section selector to the forms and collections tools.
 - Results over about 50,000 characters arrive as a file. `requestedFields` avoids that.
+
+- Vitals (`get_fv_app_Projects_Vitals`): one call per project returns the firm's at-a-glance fields as a plain list under `content` (not `content.items`), each `{fieldName, friendlyName, fieldType, value, position}`. Which fields appear is the firm's own setup, and can include key dates, money totals and team roles. Values are strings, empty when unset. It is the cheapest per-case route to money and key dates, but still one call per project.
+- Project sections (`get_fv_app_ProjectTypes_sections`): each item has `id`, `sectionSelector`, `isCollection`, `name`, `isProtected` and `customFields[]`. Each custom field has `fieldSelector`, `name`, `customFieldType` (Currency, Text, Date, Boolean, PersonLink, Dropdown, Header, Instructions, ActionButton and others), `dropdownItems`, `behaviors`, `isRequired`. Without `requestedFields` the answer can be hundreds of thousands of characters. Many fields are layout (Header, Instructions, ActionButton), not data.
+- Phases (`get_fv_app_ProjectTypes_phases`): `phaseId`, `name`, `isPermanent`, `position`. The list is not in order and positions are not contiguous. Sort by `position`.
+- Appointments (`get_fv_app_Projects_Appointments`): `appointmentId`, `projectId`, `calendarEventType`, `title`, `allDay`, `startUtc`, `endUtc`, `notes`, `location`, `ownerId`. A statute-of-limitations date can appear here as a `CustomDeadline` appointment even when the deadlines list is empty.
+- Deadlines (`get_fv_app_projects_deadlines`): returned an empty list on every project tried. Row shape still unseen.
+- Tasks per project (`get_fv_app_projects_tasks`): same row shape as user tasks. `targetDate` is ISO UTC at midnight.
+- Collection rows: `dataObject` came back empty when `requestedFields` named only `itemId,createdDate`. Ask for the fields you want, or omit `requestedFields`, to get row values.
+- Users: each item has `user` (with `userId`, `firstName`, `lastName`, `email`, `username`), `userName`, `isActive`. Its `links.next` was malformed.
 
 Not yet seen: row shapes for deadlines and appointments (the test project had none), contacts, notes, documents, and firms with more than 1,000 projects.

@@ -123,6 +123,7 @@ Only the owner shares, from the dashboard's Share menu. Claude cannot change sha
 - The org ID is fixed in each stored query. A dashboard for another firm needs its own.
 - `count` in a response is the number of items in that page, not the total. Count rows after paging.
 - Do not follow `links.next`. Page with `offset += limit` while `hasMore` is true. (One live `next` link, on the users list, was malformed.)
+- The loader's 10-page cap covers 10,000 projects. A firm near that size makes ten calls on every open of every reader's dashboard. Prefer a narrower query or a snapshot there. Not yet built or timed on a firm that large.
 - A loader that stops at 10 pages returns `cut: true`. Say on the page when data was cut. Every reader's page repeats the calls on every open, so a large firm means many calls. Checked only on a firm of 33 projects.
 - The staff list (`get_fv_app_Users`) needs `requestedFields` that include `user`, because the ID is nested there, and that also returns emails. Keep only the ID and name in the loader.
 - A firm may contain test projects and test project types. Check before treating counts as real.

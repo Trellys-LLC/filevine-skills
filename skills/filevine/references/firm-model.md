@@ -32,6 +32,9 @@ Store structure and counts only. No client names, no case data, no field values,
 
 ## Notes from testing
 
+- On a large firm, types, phases, sections and counts need only list calls. Project pages and the section list arrive as files, so count them with a script. A large share of section fields are layout (Header, Instructions, ActionButton, document tools), so count data fields separately if the page should.
+- Money often sits in Currency fields and in the vitals call (`get_fv_app_Projects_Vitals`), when the firm has set it up.
+
 - A test or small firm has many near-empty sections. Show them as "none listed" rather than hiding them.
 - The model keeps field-type counts, not every field name. Say so if asked. Field names can be added if the person wants them.
 - Money figures exist only where the firm keeps Currency fields. The page lists those.
