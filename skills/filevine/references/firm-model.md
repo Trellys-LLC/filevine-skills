@@ -17,23 +17,26 @@ Store structure and counts only. No client names, no case data, no field values,
 
 ## Procedure
 
-1. **Find the artifact.** List the person's artifacts and look for a title that starts with `Filevine firm profile`. Name a new one `Filevine firm profile – <firm name>`; the page template's title is the prefix. The list returns at most 50 per call, so an older artifact can be missing. If none is found, page the list or ask for the link before creating a new one. If two share the title, ask which is current. Do not create a duplicate.
-2. **If it exists, read the `model` collection first** and use it. Re-read live only what the person needs or what looks stale (`meta.asOf`).
-3. **If not, read the firm.** Get the org ID. Then, with small calls and `requestedFields`: project types; counts per type and phase from the project list (open and archived); phases for each type that has cases; sections for each type that has cases. Do not read forms or collections per project to build the model.
-4. **Write the model** to the artifact database as documents in collection `model` (below). Use `ArtifactData` `set`, and `if_version` on any existing document.
-5. **Publish the page** from `assets/firm-model-page.html` with the `db` capability (read the artifact-capabilities skill first). The page needs no edits: it reads the `model` collection.
-6. **Record gaps.** Anything not read goes in `gaps`. Say what was seen and what was assumed.
+One artifact named `Filevine Models` holds every firm (org) the person works with, and every project type within each firm. Do not make one artifact per firm.
+
+1. **Find it.** List the person's artifacts and look for the title `Filevine Models`. The list returns at most 50 per call, so an older artifact can be missing: page the list before concluding there is none.
+2. **Create it without making a duplicate.** If none was found: create one, then search again. If two now exist, keep the oldest (by creation time), put anything you wrote into it, and delete the one you just created. Another chat may be doing the same at the same moment.
+3. **If the firm is already in it, read first** (`org_<orgId>` and its `type_` documents) and use that. Re-read live only what the task needs or what looks stale (`asOf`).
+4. **If not, read the firm.** Get the org ID. Then, with small calls and `requestedFields`: project types; counts per type and phase from the project list (open and archived), counted with a script on a large firm; phases for each type that has cases; sections for each type that has cases. Do not read forms or collections per project to build the model.
+5. **Write the model** with `ArtifactData` `set` (or `batch`), using the documents below. Use `if_version` on any existing document. Never write one type's information into another type's document.
+6. **Publish the page** from `assets/firm-model-page.html` with the `db` capability (read the artifact-capabilities skill first). Its title is `Filevine Models`. The page needs no edits: it reads the `model` collection and shows each firm and each type.
+7. **Record gaps.** Anything not read goes in the firm's `gaps`. Say what was seen and what was assumed.
 
 ## Stored documents (collection `model`)
 
-| Doc | Shape |
+Document IDs carry the org and type, so firms and types never overwrite each other.
+
+| Doc ID | Shape |
 |---|---|
-| `meta` | `{orgId, firm, asOf, note}` |
-| `types` | `{items: [{id, name, open, archived}], note}` |
-| `phases` | `{typeName, items: [{name, position, permanent, open}], note}`, one type at a time |
-| `sections` | `{typeName, items: [{name, selector, kind: "form" or "collection", fieldCount, types: {Currency: 2, Text: 5}}], note}` |
-| `learned` | `{items: [{meaning, where, learnedAt}]}`. Append only when a task actually used something: `meaning` in the firm's words (for example what a field holds), `where` the section selector and field selector, `learnedAt` a date |
-| `gaps` | `{items: ["..."]}` |
+| `org_<orgId>` | `{orgId, firm, asOf, note}` |
+| `type_<orgId>_<typeId>` | `{orgId, id, name, open, archived, note, phases: [{name, position, permanent, open}], sections: [{name, selector, kind: "form" or "collection", fieldCount, types: {Currency: 2, Text: 5}}]}` |
+| `learned_<orgId>` | `{items: [{meaning, where, learnedAt}]}`. Append only when a task actually used something: `meaning` in the firm's words (for example what a field holds), `where` the section selector and field selector, `learnedAt` a date |
+| `gaps_<orgId>` | `{items: ["..."]}` |
 
 ## Notes from testing
 
