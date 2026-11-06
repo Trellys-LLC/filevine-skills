@@ -53,6 +53,10 @@ Almost every tool needs `header_x_fv_orgid`.
 
 For any dashboard from Filevine data, read `references/dashboards.md`. It covers when to build a live dashboard (queries that run on every open) and when a one-off snapshot (rows stored as a file) fits better, how to build each, and how sharing works.
 
+## 6. Firm model
+
+To keep what Claude learns about one firm's Filevine setup (types, phases, sections, field types) between chats, read `references/firm-model.md`. How Filevine returns data is in `references/data-shapes.md`. The page template is `assets/firm-model-page.html`.
+
 ## What has been tested
 
-Tested 2026-11-05 and 2026-11-06 against a 33-project firm: `get_fv_app_Projects` (including `limit` 1000, paging, `excludeArchived`), `get_fv_app_ProjectTypes`, `post_fv_app_utils_GetUserOrgsWithToken`, `get_fv_app_users_tasks`, `get_fv_app_ProjectTypes_sections`, `get_fv_app_Users`, and the dashboard loader code. Deadlines and appointments were called on one project with none, so their row shape is unseen. Contacts, notes, documents, forms and collections are untested. Not tested: firms with more than 1,000 projects, shared-connector dashboards, and guest access. Read a tool's schema before use.
+Tested 2026-11-05 and 2026-11-06 against a 33-project firm: `get_fv_app_Projects` (including `limit` 1000, paging, `excludeArchived`), `get_fv_app_ProjectTypes`, `post_fv_app_utils_GetUserOrgsWithToken`, `get_fv_app_users_tasks`, `get_fv_app_ProjectTypes_sections`, `get_fv_app_Users`, and the dashboard loader code. Deadlines and appointments were called on one project with none, so their row shape is unseen. Contacts, notes, documents, forms and collections are untested. The firm model procedure was run once, on that firm. Not tested: firms with more than 1,000 projects, shared-connector dashboards, and guest access. Read a tool's schema before use.
