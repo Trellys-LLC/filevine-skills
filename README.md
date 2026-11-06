@@ -1,24 +1,28 @@
 # Filevine Skills
 
-Free, open Agent Skills for working with [Filevine](https://www.filevine.com) from Claude. Made by Trellys.
+Free, open skills for working with [Filevine](https://www.filevine.com) from Claude. Made by Trellys.
 
-## Skills
+## Install (about a minute)
 
-| Skill | What it does |
-|---|---|
-| `filevine` | Connect Claude to Filevine's official connector, know what it can and cannot reach, read data safely, and build live dashboards. |
+1. **Download [filevine.zip](https://github.com/Trellys-LLC/filevine-skills/raw/main/filevine.zip).** Do not unzip it.
+2. In Claude, open **Customize > Skills** and upload that zip.
+3. **Connect Filevine:** Customize > Connectors > Filevine > sign in.
 
-## Install
+That's it. Open a new chat and try one of these:
 
-- **Claude desktop / claude.ai:** zip the `skills/filevine` folder and upload it under Customize > Skills.
-- **Claude Code:** copy `skills/filevine` into `~/.claude/skills/`.
+- "Learn how my Filevine is set up."
+- "Build me a dashboard of open cases by phase."
+- "What can Claude get from Filevine, and what can't it?"
 
-Connect Filevine first, from Customize > Connectors in claude.ai. Claude Code cannot add Filevine by URL (Filevine's sign-in server does not allow dynamic client registration), but connectors from your claude.ai account appear there.
+Every firm sets up Filevine differently, so the first run takes a little while. Claude saves what it learns in one page called Filevine Models, so later chats start faster and you can share the page with your team.
+
+**Claude Code:** say "Install the Filevine skill from https://github.com/Trellys-LLC/filevine-skills", or copy `skills/filevine` into `~/.claude/skills/`. Claude Code cannot add Filevine by URL, but a Filevine connector from your claude.ai account appears there.
 
 ## Notes
 
-- The skills contain instructions only. No client data, no credentials.
-- Filevine changes its connector over time. Each skill says when it was last checked.
+- The skill is instructions only. No client data, no credentials.
+- Filevine changes its connector over time. The skill says when it was last checked.
+- `filevine.zip` is built from `skills/filevine`. Rebuild it whenever that folder changes.
 - Not affiliated with or endorsed by Filevine. Not legal advice.
 
 License: Apache-2.0.
