@@ -40,7 +40,7 @@ Almost every tool needs `header_x_fv_orgid`.
 - The connector can write and delete, not only read. Read first. Confirm with the user before any `post_`, `patch_`, `put_` or `delete_` call.
 - Pass `requestedFields` on list calls. It keeps answers small and leaves out client names and other personal data. Add names only when needed.
 - The project list already includes phase, type, created date and last activity. Do not fetch those per case.
-- IDs come back as objects like `{"native": 305466}`. Read `.native`.
+- IDs come back as objects like `{"native": 12345}`. Read `.native`.
 - Dates are ISO UTC strings. Take the first 10 characters for the day.
 - List calls return rows under `content.items`, with `hasMore`. Page with `offset += limit` while `hasMore` is true (`limit` 1000 worked for projects).
 - `excludeArchived: true` means open cases.
