@@ -17,7 +17,7 @@ Store structure and counts only. No client names, no case data, no field values,
 
 ## Procedure
 
-1. **Find the artifact.** List the person's artifacts and look for a title that starts with `Filevine firm profile`. The list returns at most 50 per call, so an older artifact can be missing. If none is found, page the list or ask for the link before creating a new one. If two share the title, ask which is current. Do not create a duplicate.
+1. **Find the artifact.** List the person's artifacts and look for a title that starts with `Filevine firm profile`. Name a new one `Filevine firm profile – <firm name>`; the page template's title is the prefix. The list returns at most 50 per call, so an older artifact can be missing. If none is found, page the list or ask for the link before creating a new one. If two share the title, ask which is current. Do not create a duplicate.
 2. **If it exists, read the `model` collection first** and use it. Re-read live only what the person needs or what looks stale (`meta.asOf`).
 3. **If not, read the firm.** Get the org ID. Then, with small calls and `requestedFields`: project types; counts per type and phase from the project list (open and archived); phases for each type that has cases; sections for each type that has cases. Do not read forms or collections per project to build the model.
 4. **Write the model** to the artifact database as documents in collection `model` (below). Use `ArtifactData` `set`, and `if_version` on any existing document.
