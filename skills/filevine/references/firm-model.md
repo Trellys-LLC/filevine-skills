@@ -7,6 +7,10 @@ A firm model is a short record of how one firm uses Filevine: its project types,
 - **In this skill:** how Filevine returns data (`data-shapes.md`), limits, safe habits, this procedure and the page template. Nothing firm-specific.
 - **In the artifact:** facts about one firm. IDs, names, counts, field types, gaps.
 
+## Every firm is different
+
+Project types, phases, sections, selectors and field names belong to the firm. Do not assume any exist, and do not reuse one firm's names for another. Only the kinds are common: a section is a form (one record) or a collection (repeating rows), and a field has a type such as Currency, Date, Text, Dropdown or Boolean. Read the firm's own setup every time, and use real names only as examples in a reply, never in the skill.
+
 ## Safety
 
 Store structure and counts only. No client names, no case data, no field values, no contact details. The artifact belongs to whoever made it. Say who can open it. If the person wants it shared, they share it from the artifact's Share menu.

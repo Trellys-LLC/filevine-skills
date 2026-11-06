@@ -59,6 +59,8 @@ For any dashboard from Filevine data, read `references/dashboards.md`. It covers
 
 To keep what Claude learns about one firm's Filevine setup (types, phases, sections, field types) between chats, read `references/firm-model.md`. How Filevine returns data is in `references/data-shapes.md`. The page template is `assets/firm-model-page.html`.
 
+Project types, phases, sections, selectors and fields are different at every firm. Never assume a name. Read them from the firm first.
+
 ## What has been tested
 
 Tested 2026-11-05 and 2026-11-06 against a small test firm and, read only, a large firm: `get_fv_app_Projects` (including `limit` 1000, paging, `excludeArchived`), `get_fv_app_ProjectTypes`, `post_fv_app_utils_GetUserOrgsWithToken`, `get_fv_app_users_tasks`, `get_fv_app_ProjectTypes_sections`, `get_fv_app_Users`, and the dashboard loader code. Appointments, vitals, project tasks and collections were read on the large firm. Deadlines returned empty everywhere tried, so their row shape is unseen. Forms and collections were read on test data only. Contacts, notes and documents are untested. The firm model procedure was run once, on that firm. Not tested: dashboard loaders on a firm with thousands of projects, shared-connector dashboards, and guest access. Read a tool's schema before use.
