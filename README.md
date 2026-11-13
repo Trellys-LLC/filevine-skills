@@ -16,7 +16,9 @@ That's it. Open a new chat and try one of these:
 
 Every firm sets up Filevine differently, so the first run takes a little while. Claude saves what it learns in one page called Filevine Models, so later chats start faster and you can share the page with your team.
 
-**Claude Code:** say "Install the Filevine skill from https://github.com/Trellys-LLC/filevine-skills", or copy `skills/filevine` into `~/.claude/skills/`. Claude Code cannot add Filevine by URL, but a Filevine connector from your claude.ai account appears there.
+**Claude Code (plugin):** run `/plugin marketplace add Trellys-LLC/filevine-skills`, then `/plugin install filevine@trellys-skills`. Turn on auto-update for the marketplace under `/plugin` > Marketplaces if you want new versions without asking.
+
+**Claude Code (without the plugin):** say "Install the Filevine skill from https://github.com/Trellys-LLC/filevine-skills", or copy `skills/filevine` into `~/.claude/skills/`. Claude Code cannot add Filevine by URL, but a Filevine connector from your claude.ai account appears there.
 
 ## Notes
 
