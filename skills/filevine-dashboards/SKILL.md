@@ -1,3 +1,9 @@
+---
+name: filevine-dashboards
+description: Use when building a live dashboard or chart from Filevine data (cases by phase, open cases, workload), or when asked how a Filevine dashboard is shared or kept current.
+license: Apache-2.0
+---
+
 # Filevine dashboards in Claude
 
 Use the Dashboard artifact type. It gives you its own instructions when you create one, and they win over this file. This file covers only what is specific to Filevine.
@@ -64,3 +70,5 @@ Only the owner shares, from the Share menu. Claude cannot change it. By default 
 ## Not possible
 
 Anything billing. Settlements, liens and medical specials only where the firm keeps them in its own fields.
+
+Basics (connecting, org ID, what Filevine cannot give, response shapes): use the `filevine` skill.

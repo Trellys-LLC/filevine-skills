@@ -1,3 +1,9 @@
+---
+name: filevine-firm-model
+description: Use when you need to know how a firm has set up Filevine (its project types, phases, sections and field types) and have to find out, or to save what you learned so later chats do not start from zero.
+license: Apache-2.0
+---
+
 # Firm model
 
 A short record of how one firm uses Filevine: its project types, each type's phases, sections and field types. Claude does not remember it between chats, so keep it in an artifact's database.
@@ -25,3 +31,5 @@ One artifact titled `Filevine Models`, holding every firm and every project type
 | `gaps_<orgId>` | `{items: ["..."]}`. Anything not read, and anything assumed. |
 
 Many section fields are layout (Header, Instructions, ActionButton), not data. Keep field-type counts, not every field name. Money lives in Currency fields and in the vitals call, only where the firm set them up.
+
+Basics (connecting, org ID, response shapes): use the `filevine` skill.
