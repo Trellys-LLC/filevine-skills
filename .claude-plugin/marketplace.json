@@ -1,0 +1,12 @@
+{
+  "name": "trellys-skills",
+  "description": "Free Agent Skills from Trellys",
+  "owner": { "name": "Trellys" },
+  "plugins": [
+    {
+      "name": "filevine",
+      "source": "./",
+      "description": "Skills for working with Filevine from Claude."
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 ---
 name: filevine
-description: Use when connecting Claude to Filevine, when Filevine sign-in fails, when asked what Claude can or cannot pull from Filevine (billing, time, trust, settlements), when reading Filevine projects, tasks, deadlines or notes, or when building a dashboard from Filevine data.
+description: Use when connecting Claude to Filevine, when Filevine sign-in fails, when asked what Claude can or cannot pull from Filevine (billing, time, trust, settlements), when reading Filevine projects, tasks, deadlines or notes.
 license: Apache-2.0
 ---
 
@@ -36,10 +36,7 @@ Almost every tool needs `header_x_fv_orgid`. Call `post_fv_app_utils_GetUserOrgs
 
 More on response shapes: `references/data-shapes.md`.
 
-## Dashboards
+## Related skills
 
-Read `references/dashboards.md`.
-
-## Firm model
-
-Every firm sets up project types, phases and fields differently. To keep what you learn about one firm between chats, read `references/firm-model.md`.
+- Building a dashboard from Filevine data: use the `filevine-dashboards` skill.
+- Finding out, and remembering between chats, how a firm has set up Filevine (project types, phases, sections, field types): use the `filevine-firm-model` skill.

@@ -1,0 +1,10 @@
+{
+  "name": "filevine",
+  "displayName": "Filevine skills",
+  "version": "0.1.0",
+  "description": "Skills for working with Filevine from Claude: connect, read data safely, know what Filevine's connector can and cannot reach, and build live dashboards.",
+  "author": { "name": "Trellys" },
+  "repository": "https://github.com/Trellys-LLC/filevine-skills",
+  "license": "Apache-2.0",
+  "keywords": ["filevine", "legal", "skills"]
+}
